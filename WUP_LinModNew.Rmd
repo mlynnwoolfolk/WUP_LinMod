@@ -1,7 +1,7 @@
 ---
 title: "linear model from Web"
-author: "Your Name"
-date: "Put semester and year"
+author: "mariahlynn woolfolk"
+date: "summer 2024"
 output:
    html_document:
          toc: true
@@ -12,6 +12,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+### Intoduction   
 
 Read about the data from the website where it is staged.  Then form three regression models; Model1 is SIMS~ARM, Model2 is SIMS~GRIP, and Model3 is SIMS~ARM+GRIP. For each model find a 95% prediction interval of SIMS given a value of 94  for GRIP and 88 for ARM. Compare Model1 with Model3 using anova. Write it up in a markdown document, push the project up to your github account and submit it back to canvas as link. 
 
@@ -31,9 +33,20 @@ data <- read.csv(file="https://onlinestatbook.com/case_studies_rvls/physical_str
 
 ```
 
+### Methods  
+
+all variables are numerical, so we use num~num helper file
+
+
 ## Model 1 SIM~ARMS
 
-### scatterplot
+### Descriptive Results - Scatterplot
+
+```{r}
+plot(SIMS~ARM,data=data)
+```
+
+This scatter plot shows that SIMS are higher when ARM strength increases.    
 
 ### Numerical results
 
