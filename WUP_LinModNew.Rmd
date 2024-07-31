@@ -88,7 +88,8 @@ The SIMS prediction for ARM=88 is 0.71, the predicting interval is (-1.73, 3.14)
 ```{r}
 plot(SIMS~GRIP,data=data)
 ```
-The scatter plot above shows that a higher GRIP strength also makes the simulation increase.
+
+The scatter plot above shows that a higher GRIP strength also makes the simulation increase.    
 
 
 ### Numerical results 
@@ -99,29 +100,119 @@ cor(SIMS~GRIP,data=data)
 This shows that when GRIP strength increases the simulation will become positive.
 
 ### Inferential  (Build model.2)
-  
+ 
+```{r}
+model.2 <- lm(SIMS~GRIP,data=data)
+summary.lm(model.2)
+```
+
+#### scatterplot with model fit
+
+```{r}
+plot(SIMS~GRIP,data=data)
+abline(model.2, col='red')
+```
+
+
+The P-value for the interceptor and slope are 0.00000000000000022  
+
+
 
 #### predict model.2 at target point
 
-#### now add the model fit to our plot for model.2
-  
+
+```{r}
+newdata = data.frame(ARM =88, GRIP=94)
+predict(model.2, newdata, interval='pred')
+```
+
+The SIMS prediction for GRIP=94 is 0.54, the predicting interval is (-3.10, 2.03)
 
 
 ## Model 3 SIM~ARM+GRIP
 
-### Numerical results (cor)
+### Descriptive Results - Scatterplot
 
-`
-  
+```{r}
+plot(SIMS~ARM+GRIP, data=data)
+```
+
+### Numerical results
+
+```{r}
+df= data.frame(SIMS=data$SIMS,Grip=data$GRIP, ARM=data$ARM)
+cor(df)
+```
+
+The comparison matrix shows that SIMS correlates with GRIP and ARM: And GRIP correlates with SIMS
+
+
+### Numerical  reults (cor)
+
+```{r}
+cor(SIMS~ARM+GRIP, data=data)
+```
+
+This shows the similarity between the SIMS score and the variables ARM and GRIP.
+
+
 ### Inferential  (Build 2-dimentional model.3)
 
+```{r}
+model.3 = lm(SIMS ~ ARM + GRIP, data=data) 
+summary.lm(model.3)
+```
+
+The p-value from the F-statistics is 0.0000000000000002, this means the data fits the model. Intercept p-value is 0.0000000000000002  
+Arm p-value is 0.00000001  
+Grip p-value is 0.00004  
+Looking at this information they are all smaller than 0.05  
+
+
+
+
+
 #### predict model.3 at target point
-  
 
-## Comparing nested models ANOVA Test
+```{r}
+newdata = data.frame(GRIP=94, ARM=88)
+predSIMS = predict(model.3, newdata, interval='pred')
+print(predSIMS)
+```
+The predicted SIMS score for GRIP=94, ARM=88 is 0.150
 
-### Model.1 vs Model.3
+The interval prediction are (-2.13, 2.43)
+
+
+```{r}
+anova(model.1, model.3)
+summary.lm(model.1)
+model.1=lm(SIMS~ ARM, data=data)
+
+```
+
+The anova shows that there is a difference on the models since the p-value is 0.000004. 
+
+The RSS in model 2 is 188 which is smaller than model 1 which is 217. 
+
+This means that SIMS~ARM+GRIP is the better model because model 1 is SIMS ~ ARM only. 
+
+
 ### Model.2 vs Model.3
+
+```{r}
+model.2=lm(SIMS ~ GRIP, data=data)
+anova(model.2, model.3)
+summary.lm(model.1)
+```
+
+Anova shows that the Model SIM~ARM+GRIP is far better than the Model SIMS~GRIP. This is because the RSS is lower (188) and the p-value is 0.000000014
 
 ## Informally compare Model.1 with model.2
 
+```{r}
+summary.lm(model.1)
+summary.lm(model.2)
+```
+
+Model.1 SIMS~ARM is better than model.2 SIMS~GRIP because the residual for model.1 was lower than model.2
